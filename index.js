@@ -56,7 +56,8 @@ function getTimeZoneName(offset) {
 }
 
 function formatTime(utcTime){
-  const day= utcTime.toLocaleString('default',{weekday:'short'});
+    const day= utcTime.toLocaleString('default',{weekday:'short'});
+    // const date= utcTime.toLocaleString('default',{date:'numeric' , minimumIntegerDigits:});
     const month = utcTime.toLocaleString('default', { month: 'long'});
     const hours = utcTime.getHours().toString().padStart(2, '0');
     const minutes = utcTime.getMinutes().toString().padStart(2, '0');
@@ -78,6 +79,7 @@ function formatTime(utcTime){
 
 app.get("/api/:dateString" , function(req,res){
   const date = req.params.dateString;
+
   // const temp=new Date(date);
   // if(temp == "Invalid Date") // if invalid input
   // {
@@ -85,7 +87,7 @@ app.get("/api/:dateString" , function(req,res){
   //     error:"Invalid Date"
   //   });
   // }
-  if(isNaN(new Date(date))) // in other format (unix time), eg. 1451001600000
+  if(isNaN(new Date(date)) && !isNaN(new Date(date*1000))) // in other format (unix time), eg. 1451001600000
   { 
     var utcTime= new Date(date*1000);
     utcTime = new Date(utcTime/1000);
@@ -117,6 +119,12 @@ app.get("/api/:dateString" , function(req,res){
     res.json({
       unix: date,
       utc: formattedTime
+    })
+  }
+  else if(isNaN(new Date(date)))
+  {
+    res.json({
+      error: "Invalid Date"
     })
   }
   else // in format YYYY-MM-DD
