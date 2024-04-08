@@ -24,13 +24,6 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-app.get("/api/", function(req,res){
-  date = new Date();
-  res.json({
-    unix: date.getTime(),
-    utc: date.toString()
-  });
-})
 
 function getTimeZoneName(offset) {
   const timeZoneMap = {
@@ -76,6 +69,17 @@ function formatTime(utcTime){
                       + getTimeZoneName(utcTime.getTimezoneOffset());
     return formattedTime;
 }
+
+
+app.get("/api/", function(req,res){
+  var date = new Date();
+  temp=date;
+  date = formatTime(date);
+  res.json({
+    unix: temp.getTime(),
+    utc: date
+  });
+})
 
 app.get("/api/:dateString" , function(req,res){
   const date = req.params.dateString;
