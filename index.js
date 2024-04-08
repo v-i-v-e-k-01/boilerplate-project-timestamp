@@ -58,7 +58,7 @@ function formatTime(utcTime){
     // const hours = utcTime.toLocaleString('default', { hour:'' minimumIntegerDigits: 2});
     // const minutes = utcTime.toLocaleString('default', { minute: 'long' , minimumIntegerDigits: 2});
     // const seconds = utcTime.toLocaleString('default', { second: 'long' , minimumIntegerDigits: 2});
-    const milliseconds = utcTime.getMilliseconds().toString().padStart(2, '0');
+    // const milliseconds = utcTime.getMilliseconds().toString().padStart(2, '0');
     var formattedTime= day + ", " 
                       + utcTime.getDate() + " "
                       + month+ " "
@@ -66,7 +66,7 @@ function formatTime(utcTime){
                       + hours+":"
                       + minutes+":"
                       + seconds+" "
-                      + milliseconds+" "
+                      // + milliseconds+" "
                       + getTimeZoneName(utcTime.getTimezoneOffset());
     return formattedTime;
 }
