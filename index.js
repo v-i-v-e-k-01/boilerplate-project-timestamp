@@ -151,8 +151,8 @@ app.get("/api/:dateString" , function(req,res,next){
   else
   {
     res.json({
-      unix: date.getTime(),
-      utc: date.toString()
+      unix: req.params.dateString.getTime(),
+      utc: req.params.dateString.toString()
     });
   }
   next();
