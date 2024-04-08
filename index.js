@@ -139,13 +139,20 @@ app.get("/api/:dateString" , function(req,res,next){
     });
   }
 
-  else // in format YYYY-MM-DD
+  else if (!isNaN(new Date(date)))// in format YYYY-MM-DD
   {
     const unixTime=new Date(date).getTime();
     const formattedTime= formatTime(new Date(date));
     res.json({ 
       unix: unixTime,
       utc: formattedTime
+    });
+  }
+  else
+  {
+    res.json({
+      unix: date.getTime(),
+      utc: date.toString()
     });
   }
   next();
