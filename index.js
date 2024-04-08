@@ -71,7 +71,7 @@ function formatTime(utcTime){
 }
 
 
-app.get("/api/", function(req,res){
+app.get("/api/", function(req,res,next){
   var date = new Date();
   temp=date;
   date = formatTime(date);
@@ -84,7 +84,7 @@ app.get("/api/", function(req,res){
 
 const isInvalidDate = (date)=> date.toString() === "Invalid Date";
 
-app.get("/api/:dateString" , function(req,res){
+app.get("/api/:dateString" , function(req,res,next){
   var date = new Date(req.params.dateString);
 
   if(isInvalidDate(date))
