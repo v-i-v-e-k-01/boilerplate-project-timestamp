@@ -58,7 +58,7 @@ function getTimeZoneName(offset) {
 function formatTime(utcTime){
     const day= utcTime.toLocaleString('default',{weekday:'short'});
     // const date= utcTime.toLocaleString('default',{date:'numeric' , minimumIntegerDigits:});
-    const month = utcTime.toLocaleString('default', { month: 'long'});
+    const month = utcTime.toLocaleString('default', { month: 'short'});
     const hours = utcTime.getHours().toString().padStart(2, '0');
     const minutes = utcTime.getMinutes().toString().padStart(2, '0');
     const seconds = utcTime.getSeconds().toString().padStart(2, '0');
