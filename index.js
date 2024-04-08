@@ -79,6 +79,7 @@ app.get("/api/", function(req,res){
     unix: temp.getTime(),
     utc: date
   });
+  next();
 });
 
 const isInvalidDate = (date)=> date.toString() === "Invalid Date";
@@ -135,7 +136,7 @@ app.get("/api/:dateString" , function(req,res){
     res.json({
       unix:parseInt(req.params.dateString),
       utc: formattedTime
-    })
+    });
   }
 
   else // in format YYYY-MM-DD
@@ -147,6 +148,7 @@ app.get("/api/:dateString" , function(req,res){
       utc: formattedTime
     });
   }
+  next();
 });
 
 
