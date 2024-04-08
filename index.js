@@ -25,50 +25,50 @@ app.get("/api/hello", function (req, res) {
 });
 
 
-function getTimeZoneName(offset) {
-  const timeZoneMap = {
-      0: 'GMT',
-      60: 'CET', // Central European Time
-      120: 'EET', // Eastern European Time
-      180: 'MSK', // Moscow Standard Time
-      240: 'GFT', // Gulf Standard Time
-      300: 'AST', // Arabian Standard Time
-      330: 'IRST', // Iran Standard Time
-      345: 'AFT', // Afghanistan Time
-      360: 'GST', // Gulf Standard Time
-      390: 'IST', // Indian Standard Time
-      420: 'BST', // Bangladesh Standard Time
-      480: 'CST', // China Standard Time
-      510: 'JST', // Japan Standard Time
-      525: 'ACST', // Australian Central Standard Time
-      540: 'AEST', // Australian Eastern Standard Time
-      570: 'NZST', // New Zealand Standard Time
-      // Add more timezone mappings as needed
-  };
-  return timeZoneMap[offset] || 'Unknown'; // Return timezone name or 'Unknown' if not found
-}
+// function getTimeZoneName(offset) {
+//   const timeZoneMap = {
+//       0: 'GMT',
+//       60: 'CET', // Central European Time
+//       120: 'EET', // Eastern European Time
+//       180: 'MSK', // Moscow Standard Time
+//       240: 'GFT', // Gulf Standard Time
+//       300: 'AST', // Arabian Standard Time
+//       330: 'IRST', // Iran Standard Time
+//       345: 'AFT', // Afghanistan Time
+//       360: 'GST', // Gulf Standard Time
+//       390: 'IST', // Indian Standard Time
+//       420: 'BST', // Bangladesh Standard Time
+//       480: 'CST', // China Standard Time
+//       510: 'JST', // Japan Standard Time
+//       525: 'ACST', // Australian Central Standard Time
+//       540: 'AEST', // Australian Eastern Standard Time
+//       570: 'NZST', // New Zealand Standard Time
+//       // Add more timezone mappings as needed
+//   };
+//   return timeZoneMap[offset] || 'Unknown'; // Return timezone name or 'Unknown' if not found
+// }
 
-function formatTime(utcTime){
-    const day= utcTime.toLocaleString('default',{weekday:'short'});
-    // const date= utcTime.toLocaleString('default',{date:'numeric' , minimumIntegerDigits:});
-    const month = utcTime.toLocaleString('default', { month: 'short'});
-    const hours = utcTime.getHours().toString().padStart(2, '0');
-    const minutes = utcTime.getMinutes().toString().padStart(2, '0');
-    const seconds = utcTime.getSeconds().toString().padStart(2, '0');
-    // const hours = utcTime.toLocaleString('default', { hour:'' minimumIntegerDigits: 2});
-    // const minutes = utcTime.toLocaleString('default', { minute: 'long' , minimumIntegerDigits: 2});
-    // const seconds = utcTime.toLocaleString('default', { second: 'long' , minimumIntegerDigits: 2});
+// function formatTime(utcTime){
+//     const day= utcTime.toLocaleString('default',{weekday:'short'});
+//     // const date= utcTime.toLocaleString('default',{date:'numeric' , minimumIntegerDigits:});
+//     const month = utcTime.toLocaleString('default', { month: 'short'});
+//     const hours = utcTime.getHours().toString().padStart(2, '0');
+//     const minutes = utcTime.getMinutes().toString().padStart(2, '0');
+//     const seconds = utcTime.getSeconds().toString().padStart(2, '0');
+//     // const hours = utcTime.toLocaleString('default', { hour:'' minimumIntegerDigits: 2});
+//     // const minutes = utcTime.toLocaleString('default', { minute: 'long' , minimumIntegerDigits: 2});
+//     // const seconds = utcTime.toLocaleString('default', { second: 'long' , minimumIntegerDigits: 2});
 
-    var formattedTime= day + ", " 
-                      + utcTime.getDate() + " "
-                      + month+ " "
-                      + utcTime.getFullYear()+ " "
-                      + hours+":"
-                      + minutes+":"
-                      + seconds+" "
-                      + getTimeZoneName(utcTime.getTimezoneOffset());
-    return formattedTime;
-}
+//     var formattedTime= day + ", " 
+//                       + utcTime.getDate() + " "
+//                       + month+ " "
+//                       + utcTime.getFullYear()+ " "
+//                       + hours+":"
+//                       + minutes+":"
+//                       + seconds+" "
+//                       + getTimeZoneName(utcTime.getTimezoneOffset());
+//     return formattedTime;
+// }
 
 
 app.get("/api/", function(req,res){
@@ -79,59 +79,74 @@ app.get("/api/", function(req,res){
     unix: temp.getTime(),
     utc: date
   });
-})
+});
+
+const isInvalidDate = (date)=> date.toString() === "Invalid Date";
 
 app.get("/api/:dateString" , function(req,res){
-  const date = req.params.dateString;
-  if(isNaN(new Date(date)) && !isNaN(new Date(date*1000))) // in other format (unix time), eg. 1451001600000
-  { 
-    var utcTime= new Date(date*1000);
-    utcTime = new Date(utcTime/1000);
-    const formattedTime = formatTime(utcTime);
-    // const day= utcTime.toLocaleString('default',{weekday:'short'});
-    // const month = utcTime.toLocaleString('default', { month: 'long'});
-    // const hours = utcTime.getHours().toString().padStart(2, '0');
-    // const minutes = utcTime.getMinutes().toString().padStart(2, '0');
-    // const seconds = utcTime.getSeconds().toString().padStart(2, '0');
-    // // const hours = utcTime.toLocaleString('default', { hour:'' minimumIntegerDigits: 2});
-    // // const minutes = utcTime.toLocaleString('default', { minute: 'long' , minimumIntegerDigits: 2});
-    // // const seconds = utcTime.toLocaleString('default', { second: 'long' , minimumIntegerDigits: 2});
+  var date = new Date(req.params.dateString);
 
-    // var formattedTime= day + ", " 
-    //                   + utcTime.getDate() + " "
-    //                   + month+ " "
-    //                   + utcTime.getFullYear()+ " "
-    //                   + hours+":"
-    //                   + minutes+":"
-    //                   + seconds+" "
-    //                   + getTimeZoneName(utcTime.getTimezoneOffset());
-    // // var dateFormatting={
-    // //   date: 'numeric',
-    // //   month: 'long',
-    // //   year: 'numeric',
-    // //   minimumIntegerDigits: 2
-    // // }
-    // // utcTime = utcTime.toLocaleDateString(,dateFormatting);
-    res.json({
-      unix: date,
-      utc: formattedTime
-    })
+  if(isInvalidDate(date))
+  {
+    date = new Date(+req.params.dateString);
   }
-  else if(isNaN(new Date(date)))
+
+  if(isInvalidDate(date))
   {
     res.json({
       error: "Invalid Date"
-    })
-  }
-  else // in format YYYY-MM-DD
-  {
-    const unixTime=new Date(date).getTime();
-    const formattedTime= formatTime(new Date(date));
-    res.json({ 
-      unix: unixTime,
-      utc: formattedTime
     });
+    return;
   }
+
+  res.json({
+    unix: date.getTime(),
+    utc: date.toString()
+  })
+  // if(isNaN(new Date(date)) && !isNaN(new Date(date*1000))) // in other format (unix time), eg. 1451001600000
+  // { 
+  //   var utcTime= new Date(date*1000);
+  //   utcTime = new Date(utcTime/1000);
+  //   const formattedTime = formatTime(utcTime);
+  //   // const day= utcTime.toLocaleString('default',{weekday:'short'});
+  //   // const month = utcTime.toLocaleString('default', { month: 'long'});
+  //   // const hours = utcTime.getHours().toString().padStart(2, '0');
+  //   // const minutes = utcTime.getMinutes().toString().padStart(2, '0');
+  //   // const seconds = utcTime.getSeconds().toString().padStart(2, '0');
+  //   // // const hours = utcTime.toLocaleString('default', { hour:'' minimumIntegerDigits: 2});
+  //   // // const minutes = utcTime.toLocaleString('default', { minute: 'long' , minimumIntegerDigits: 2});
+  //   // // const seconds = utcTime.toLocaleString('default', { second: 'long' , minimumIntegerDigits: 2});
+
+  //   // var formattedTime= day + ", " 
+  //   //                   + utcTime.getDate() + " "
+  //   //                   + month+ " "
+  //   //                   + utcTime.getFullYear()+ " "
+  //   //                   + hours+":"
+  //   //                   + minutes+":"
+  //   //                   + seconds+" "
+  //   //                   + getTimeZoneName(utcTime.getTimezoneOffset());
+  //   // // var dateFormatting={
+  //   // //   date: 'numeric',
+  //   // //   month: 'long',
+  //   // //   year: 'numeric',
+  //   // //   minimumIntegerDigits: 2
+  //   // // }
+  //   // // utcTime = utcTime.toLocaleDateString(,dateFormatting);
+  //   res.json({
+  //     unix: date,
+  //     utc: formattedTime
+  //   })
+  // }
+
+  // else // in format YYYY-MM-DD
+  // {
+  //   const unixTime=new Date(date).getTime();
+  //   const formattedTime= formatTime(new Date(date));
+  //   res.json({ 
+  //     unix: unixTime,
+  //     utc: formattedTime
+  //   });
+  // }
 });
 
 
