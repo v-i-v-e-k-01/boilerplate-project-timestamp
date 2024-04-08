@@ -79,14 +79,6 @@ function formatTime(utcTime){
 
 app.get("/api/:dateString" , function(req,res){
   const date = req.params.dateString;
-
-  // const temp=new Date(date);
-  // if(temp == "Invalid Date") // if invalid input
-  // {
-  //   res.json({
-  //     error:"Invalid Date"
-  //   });
-  // }
   if(isNaN(new Date(date)) && !isNaN(new Date(date*1000))) // in other format (unix time), eg. 1451001600000
   { 
     var utcTime= new Date(date*1000);
