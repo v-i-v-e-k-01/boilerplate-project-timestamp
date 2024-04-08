@@ -71,31 +71,31 @@ function formatTime(utcTime){
     return formattedTime;
 }
 
-function parseISO8601(dateString) {
-  const [datePart, timePart] = dateString.split("T");
+// function parseISO8601(dateString) {
+//   const [datePart, timePart] = dateString.split("T");
   
-  // Parse date part
-  const dateComponents = datePart.split("-");
-  const year = parseInt(dateComponents[0]);
-  const month = parseInt(dateComponents[1]) - 1; // Months are zero-based
-  const day = parseInt(dateComponents[2]);
+//   // Parse date part
+//   const dateComponents = datePart.split("-");
+//   const year = parseInt(dateComponents[0]);
+//   const month = parseInt(dateComponents[1]) - 1; // Months are zero-based
+//   const day = parseInt(dateComponents[2]);
 
-  // Parse time part if present
-  let hours = 0,
-      minutes = 0,
-      seconds = 0;
-  if (timePart) {
-      const timeComponents = timePart.split(":");
-      hours = parseInt(timeComponents[0]);
-      minutes = parseInt(timeComponents[1]);
-      if (timeComponents[2]) {
-          const secondComponents = timeComponents[2].split(".");
-          seconds = parseInt(secondComponents[0]);
-      }
-  }
+//   // Parse time part if present
+//   let hours = 0,
+//       minutes = 0,
+//       seconds = 0;
+//   if (timePart) {
+//       const timeComponents = timePart.split(":");
+//       hours = parseInt(timeComponents[0]);
+//       minutes = parseInt(timeComponents[1]);
+//       if (timeComponents[2]) {
+//           const secondComponents = timeComponents[2].split(".");
+//           seconds = parseInt(secondComponents[0]);
+//       }
+//   }
 
-  return new Date(year, month, day, hours, minutes, seconds);
-}
+//   return new Date(year, month, day, hours, minutes, seconds);
+// }
 
 
 app.get("/api/", function(req,res,next){
@@ -175,13 +175,13 @@ app.get("/api/:dateString" , function(req,res,next){
       utc: formattedTime
     });
   }
-  else
-  {
-    res.json({
-      unix: parseISO8601(req.params.dateString).getTime(),
-      utc: parseISO8601(req.params.dateString).toString()
-    });
-  }
+  // else
+  // {
+  //   res.json({
+  //     unix: parseISO8601(req.params.dateString).getTime(),
+  //     utc: parseISO8601(req.params.dateString).toString()
+  //   });
+  // }
   next();
 });
 
