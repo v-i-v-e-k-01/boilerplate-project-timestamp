@@ -28,7 +28,7 @@ app.get("/api/:date", (req, res, next)=>{
     if( isNaN(new Date(req.params.date)) && ! isNaN(new Date(req.params.date*1000)) )
     {
       res.json({
-        unix: req.params.date,
+        unix: parseInt(req.params.date),
         utc: new Date(req.params.date *1000).toUTCString()
       });
       
