@@ -24,164 +24,34 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-
-function getTimeZoneName(offset) {
-  const timeZoneMap = {
-      0: 'GMT',
-      60: 'CET', // Central European Time
-      120: 'EET', // Eastern European Time
-      180: 'MSK', // Moscow Standard Time
-      240: 'GFT', // Gulf Standard Time
-      300: 'AST', // Arabian Standard Time
-      330: 'IRST', // Iran Standard Time
-      345: 'AFT', // Afghanistan Time
-      360: 'GST', // Gulf Standard Time
-      390: 'IST', // Indian Standard Time
-      420: 'BST', // Bangladesh Standard Time
-      480: 'CST', // China Standard Time
-      510: 'JST', // Japan Standard Time
-      525: 'ACST', // Australian Central Standard Time
-      540: 'AEST', // Australian Eastern Standard Time
-      570: 'NZST', // New Zealand Standard Time
-      // Add more timezone mappings as needed
-  };
-  return timeZoneMap[offset] || 'Unknown'; // Return timezone name or 'Unknown' if not found
-}
-
-function formatTime(utcTime){
-    const day= utcTime.toLocaleString('default',{weekday:'short'});
-    // const date= utcTime.toLocaleString('default',{date:'numeric' , minimumIntegerDigits:});
-    const month = utcTime.toLocaleString('default', { month: 'short'});
-    const hours = utcTime.getHours().toString().padStart(2, '0');
-    const minutes = utcTime.getMinutes().toString().padStart(2, '0');
-    const seconds = utcTime.getSeconds().toString().padStart(2, '0');
-    // const hours = utcTime.toLocaleString('default', { hour:'' minimumIntegerDigits: 2});
-    // const minutes = utcTime.toLocaleString('default', { minute: 'long' , minimumIntegerDigits: 2});
-    // const seconds = utcTime.toLocaleString('default', { second: 'long' , minimumIntegerDigits: 2});
-    // const milliseconds = utcTime.getMilliseconds().toString().padStart(2, '0');
-    var formattedTime= day + ", " 
-                      + utcTime.getDate() + " "
-                      + month+ " "
-                      + utcTime.getFullYear()+ " "
-                      + hours+":"
-                      + minutes+":"
-                      + seconds+" "
-                      // + milliseconds+" "
-                      + getTimeZoneName(utcTime.getTimezoneOffset());
-    return formattedTime;
-}
-
-// function parseISO8601(dateString) {
-//   const [datePart, timePart] = dateString.split("T");
-  
-//   // Parse date part
-//   const dateComponents = datePart.split("-");
-//   const year = parseInt(dateComponents[0]);
-//   const month = parseInt(dateComponents[1]) - 1; // Months are zero-based
-//   const day = parseInt(dateComponents[2]);
-
-//   // Parse time part if present
-//   let hours = 0,
-//       minutes = 0,
-//       seconds = 0;
-//   if (timePart) {
-//       const timeComponents = timePart.split(":");
-//       hours = parseInt(timeComponents[0]);
-//       minutes = parseInt(timeComponents[1]);
-//       if (timeComponents[2]) {
-//           const secondComponents = timeComponents[2].split(".");
-//           seconds = parseInt(secondComponents[0]);
-//       }
-//   }
-
-//   return new Date(year, month, day, hours, minutes, seconds);
-// }
-
-
-app.get("/api/", function(req,res,next){
-  var date = new Date();
-  temp=date;
-  date = formatTime(date);
-  res.json({
-    unix: temp.getTime(),
-    utc: date
-  });
-  next();
+app.get("/api/:date", (req, res, next)=>{
+    if( isNaN(new Date(req.params.date)) && ! isNaN(new Date(req.params.date*1000)) )
+    {
+      res.json({
+        unix: req.params.date,
+        utc: new Date(req.params.date *1000).toUTCString()
+      });
+      
+    }
+    else if ( isNaN(new Date(req.params.date))){
+      res.json({
+        error: "Invalid Date"
+      });
+    }
+    else{
+      res.json({
+        unix: new Date(req.params.date).getTime(),
+        utc: new Date(req.params.date).toUTCString()
+      });
+    }
+    next();
 });
 
-const isInvalidDate = (date)=> date.toString() === "Invalid Date";
-
-app.get("/api/:dateString" , function(req,res,next){
-  var date = new Date(req.params.dateString);
-
-  if(isInvalidDate(date))
-  {
-    date = new Date(+req.params.dateString);
-  }
-
-  if(isInvalidDate(date))
-  {
-    res.json({
-      error: "Invalid Date"
-    });
-    return;
-  }
-
-  // res.json({
-  //   unix: date.getTime(),
-  //   utc: date.toString()
-  // });
-  if(!isNaN(new Date(req.params.dateString*1000))) // in other format (unix time), eg. 1451001600000
-  { 
-    var utcTime= new Date(req.params.dateString*1000);
-    utcTime = new Date(utcTime/1000);
-    const formattedTime = formatTime(utcTime);
-    // const day= utcTime.toLocaleString('default',{weekday:'short'});
-    // const month = utcTime.toLocaleString('default', { month: 'long'});
-    // const hours = utcTime.getHours().toString().padStart(2, '0');
-    // const minutes = utcTime.getMinutes().toString().padStart(2, '0');
-    // const seconds = utcTime.getSeconds().toString().padStart(2, '0');
-    // // const hours = utcTime.toLocaleString('default', { hour:'' minimumIntegerDigits: 2});
-    // // const minutes = utcTime.toLocaleString('default', { minute: 'long' , minimumIntegerDigits: 2});
-    // // const seconds = utcTime.toLocaleString('default', { second: 'long' , minimumIntegerDigits: 2});
-
-    // var formattedTime= day + ", " 
-    //                   + utcTime.getDate() + " "
-    //                   + month+ " "
-    //                   + utcTime.getFullYear()+ " "
-    //                   + hours+":"
-    //                   + minutes+":"
-    //                   + seconds+" "
-    //                   + getTimeZoneName(utcTime.getTimezoneOffset());
-    // // var dateFormatting={
-    // //   date: 'numeric',
-    // //   month: 'long',
-    // //   year: 'numeric',
-    // //   minimumIntegerDigits: 2
-    // // }
-    // // utcTime = utcTime.toLocaleDateString(,dateFormatting);
-    res.json({
-      unix:parseInt(req.params.dateString),
-      utc: formattedTime
-    });
-  }
-
-  else if (!isNaN(new Date(date)))// in format YYYY-MM-DD
-  {
-    const unixTime=new Date(date).getTime();
-    const formattedTime= formatTime(new Date(date));
-    res.json({ 
-      unix: unixTime,
-      utc: formattedTime
-    });
-  }
-  // else
-  // {
-  //   res.json({
-  //     unix: parseISO8601(req.params.dateString).getTime(),
-  //     utc: parseISO8601(req.params.dateString).toString()
-  //   });
-  // }
+app.get("/api/", (req, res, next)=>{
+  res.json({
+    unix: new Date().getTime(),
+    utc: new Date().toUTCString()
+  });
   next();
 });
 
